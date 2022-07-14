@@ -2,6 +2,7 @@ import React from 'react'
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 
 const Task = (newTask) => {
+
     
     return ( 
         <View style={styles.item}> 
@@ -23,6 +24,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 20,
+
     },
     itemLeft:{
         flexDirection: 'row',
@@ -35,14 +37,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#55BCF6',
         opacity: 0.4,
         borderRadius: 5,
+        marginRight: 20
     },
     itemText:{
         maxWidth: '80%'
-
+        
     },
     circular:{
         borderRadius: 5,
-        borderWidth2,
+        borderWidth: 2,
         borderColor: 'black',
         width: 12,
         height: 12,
