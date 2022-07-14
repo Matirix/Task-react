@@ -1,16 +1,28 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from 'react-native';
 import Task from './components/tasks';
+import * as Progress from 'react-native-progress'
 
 
 export default function App() {
-
   const [task, setTask] = useState('');
-  const [taskItems, setTaskItem] = useState([]);
+  const [taskItems, setTaskItem] = useState(['Set a new Task!']);
+  const [exp, newExp] = useState(0.01);
+  const [level, newLevel] = useState(1)
+
+  useEffect(() => {
+    console.log("wroking")
+    if (exp > 1) {
+      newExp(0.01)
+      newLevel(level + 1)
+    }
+
+  }, [exp])
+
 
   const handleAddTask = () => {
-    console.log(task)
+    if (!task) {return} 
     // Takes the text from task and adds it onto to the list of taskItems
     setTaskItem([...taskItems, task]);
     // Resets the task to null
@@ -18,10 +30,15 @@ export default function App() {
   }
 
   const completeTask = (index) => {
+    // Copies the list and splices it by the index number of the item.
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1)
+    // New list is the new copy
     setTaskItem(itemsCopy)
+    // Progress bar, values can be changed dynamically later
+    newExp(exp + 0.2)
   }
+
 
   return (
     <View style={styles.container}>
@@ -29,6 +46,11 @@ export default function App() {
       <View style={styles.tasksWrapper}>
         {/* Title */}
         <Text style={styles.navTitle}>Tasks</Text>
+        <View style={styles.level}>
+          <Text style={styles.leveltext}>Level: {level}</Text>
+        </View>
+        <Progress.Bar style={styles.progressBar} progress={exp} width={null}  height={10} borderWidth={0.1}/>
+
         {/* Where Items will be displayed */}
         <View style={styles.items}>
         
@@ -72,6 +94,23 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     paddingHorizontal: 20,
   },
+  level: {
+    // borderRadius: 50,
+    // border: 'solid',
+
+  },
+  leveltext: {
+    fontSize: 25,
+    backgroundColor: "",
+    borderRadius: 50,
+    margin: '5px',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  progressBar: {
+    marginBottom: 20,
+  },
+
   navTitle:{
     fontSize: 24,
     fontWeight: 'bold',
@@ -104,5 +143,6 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     fontSize: 24
   },
+
 
 });
