@@ -29,28 +29,31 @@ export default function App() {
   const [exp, newExp] = useState(0.01);
   const [level, newLevel] = useState(1)
 
+  const setDocs = () => getDocs(colRef)
+  .then((snapshot) => {
+    //--------------Does not seem to include the id with the docs .data-----------
+          //Maps all the documents and puts it into a list
+    // snapshot.docs.map((docs) => documents.push(docs.data(), {id: docs.id}))
+
+    // Gets all the documents + it's id and puts it into a list
+    const documents = []
+    snapshot.docs.forEach((doc) => {
+      documents.push({...doc.data(), id: doc.id})
+    });  
+    setTaskItem(documents)
+
+  })
+  .catch(err => {
+    console.log(err.message)
+  })
+
+
+
   //TaskItems to get tasks from the database
-  // useEffect(() => {
-  //   getDocs(colRef)
-  //   .then((snapshot) => {
-  //     //--------------Does not seem to include the id with the docs .data-----------
-  //           //Maps all the documents and puts it into a list
-  //     // snapshot.docs.map((docs) => documents.push(docs.data(), {id: docs.id}))
-
-  //     // Gets all the documents + it's id and puts it into a list
-  //     const documents = []
-  //     snapshot.docs.forEach((doc) => {
-  //       documents.push({...doc.data(), id: doc.id})
-  //     });  
-  //     setTaskItem(documents)
-  //     // console.log(documents)
-  //   })
-  //   .catch(err => {
-  //     console.log(err.message)
-  //   })
-  // }, [])
-
-
+  useEffect(() => {
+    setDocs()
+    // Somehow have to fix rerunning items
+  }, [])
 
   useEffect(() => {
     console.log("working EXP")
@@ -64,11 +67,13 @@ export default function App() {
   const handleAddTask = () => {
     if (!task) {return} 
     // Takes the text from task and adds it onto to the list of taskItems
-    setTaskItem([...taskItems, task]);
+    // setTaskItem([...taskItems, task]);
     //Add to Firestore
     addDoc(colRef, {
       Goal: task,
     })
+    // Crummy way of refreshing the compononent to display updated tasks
+    setDocs()
     // Resets the task to null
     setTask('');
   }
@@ -78,7 +83,8 @@ export default function App() {
     const docRef = doc(db, 'Goals', id)
     //Deletes a task
     deleteDoc(docRef)
-
+    // Crummy way of refreshing the compononent to display updated tasks
+    setDocs()
     // Progress bar, values can be changed dynamically later
     newExp(exp + 0.2)
   }

@@ -1,6 +1,7 @@
 import React from 'react'
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 
+//Accepts a list as a prop
 const Task = (newTask) => {
 
     
