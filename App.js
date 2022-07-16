@@ -3,21 +3,61 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from 'react-native';
 import Task from './components/tasks';
 import * as Progress from 'react-native-progress'
+//Firebase stuff
+import { initializeApp} from 'firebase/app'
+import firebaseConfig from './index'
+import { getFirestore, collection, query, where, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
+
+
+// ---------------------------
+// init firebase app
+initializeApp(firebaseConfig)
+
+// initservices
+const db = getFirestore()
+
+// collection ref
+const colRef = collection(db, 'Goals')
+// ---------------------------
 
 
 export default function App() {
+  //For user ever-changing input
   const [task, setTask] = useState('');
-  const [taskItems, setTaskItem] = useState(['Set a new Task!']);
+  //Task item is stored when user presses button
+  const [taskItems, setTaskItem] = useState([]);
   const [exp, newExp] = useState(0.01);
   const [level, newLevel] = useState(1)
 
+  //TaskItems to get tasks from the database
+  // useEffect(() => {
+  //   getDocs(colRef)
+  //   .then((snapshot) => {
+  //     //--------------Does not seem to include the id with the docs .data-----------
+  //           //Maps all the documents and puts it into a list
+  //     // snapshot.docs.map((docs) => documents.push(docs.data(), {id: docs.id}))
+
+  //     // Gets all the documents + it's id and puts it into a list
+  //     const documents = []
+  //     snapshot.docs.forEach((doc) => {
+  //       documents.push({...doc.data(), id: doc.id})
+  //     });  
+  //     setTaskItem(documents)
+  //     // console.log(documents)
+  //   })
+  //   .catch(err => {
+  //     console.log(err.message)
+  //   })
+  // }, [])
+
+
+
   useEffect(() => {
-    console.log("wroking")
+    console.log("working EXP")
     if (exp > 1) {
       newExp(0.01)
       newLevel(level + 1)
     }
-
   }, [exp])
 
 
@@ -25,19 +65,24 @@ export default function App() {
     if (!task) {return} 
     // Takes the text from task and adds it onto to the list of taskItems
     setTaskItem([...taskItems, task]);
+    //Add to Firestore
+    addDoc(colRef, {
+      Goal: task,
+    })
     // Resets the task to null
     setTask('');
   }
 
-  const completeTask = (index) => {
-    // Copies the list and splices it by the index number of the item.
-    let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1)
-    // New list is the new copy
-    setTaskItem(itemsCopy)
+  const completeTask = (id) => {
+    //Takes the db, the collection it's in and the id of the document
+    const docRef = doc(db, 'Goals', id)
+    //Deletes a task
+    deleteDoc(docRef)
+
     // Progress bar, values can be changed dynamically later
     newExp(exp + 0.2)
   }
+
 
 
   return (
@@ -51,14 +96,13 @@ export default function App() {
         </View>
         <Progress.Bar style={styles.progressBar} progress={exp} width={null}  height={10} borderWidth={0.1}/>
 
-        {/* Where Items will be displayed */}
+        {/* How Items will be displayed */}
         <View style={styles.items}>
-        
           {
             taskItems.map((item, index) => {
               return (
-                <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                  <Task text={item}/>
+                <TouchableOpacity key={index} onPress={() => completeTask(item.id)}>
+                  <Task text={item.Goal}/>
                 </TouchableOpacity>
               )
             })
