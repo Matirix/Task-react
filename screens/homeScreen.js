@@ -20,7 +20,7 @@ const colRef = collection(db, 'Goals')
 // ---------------------------
 
 
-export default function App() {
+export default function homeScreen() {
   //For user ever-changing input
   const [task, setTask] = useState('');
   //Task item is stored when user presses button
