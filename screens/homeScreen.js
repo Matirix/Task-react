@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from 'react-native';
-import Task from './components/tasks';
+import Task from '../components/tasks';
 import * as Progress from 'react-native-progress'
 //Firebase stuff
 import { initializeApp} from 'firebase/app'
-import firebaseConfig from './index'
-import { getFirestore, collection, query, where, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
+import firebaseConfig from '../index'
+import { getFirestore, collection, query, where, getDocs, addDoc, deleteDoc, doc, initializeFirestore } from "firebase/firestore";
+import { ReactNativeFirebase } from '@react-native-firebase/app';
 
 
 // ---------------------------
@@ -20,7 +21,7 @@ const colRef = collection(db, 'Goals')
 // ---------------------------
 
 
-export default function homeScreen() {
+const Homescreen = () => {
   //For user ever-changing input
   const [task, setTask] = useState('');
   //Task item is stored when user presses button
@@ -119,7 +120,7 @@ export default function homeScreen() {
       {/* Make a new Task */}
       <KeyboardAvoidingView
         /* Pushes everything up instead of covering*/
-        behavior = {Platform.OS === "ios" ? "padding" : "height" }
+        // behavior = {Platform.OS === "ios" ? "padding" : "height" }
         style= {styles.writeTaskWrapper}>
           {/* State changes when text changes */}
         <TextInput style={styles.input} placeholder={'Write a task'} value={task} onChangeText={text => setTask(text)} />
@@ -151,9 +152,9 @@ const styles = StyleSheet.create({
   },
   leveltext: {
     fontSize: 25,
-    backgroundColor: "",
+    backgroundColor: "transparent",
     borderRadius: 50,
-    margin: '5px',
+    margin: 5,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -196,3 +197,5 @@ const styles = StyleSheet.create({
 
 
 });
+
+export default Homescreen
