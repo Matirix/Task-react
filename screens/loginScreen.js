@@ -40,21 +40,21 @@ const LoginScreen = () => {
             <TouchableOpacity
                 onPress={() => {}}
                 style={styles.button}>
-                <Text style={styles.button}> Login </Text>
+                <Text style={[styles.button, styles.buttonText]}> Login </Text>
             </TouchableOpacity>
 
             {/* Signup */}
             <TouchableOpacity
                 onPress={() => {}}
                 style={styles.button}>
-                <Text style={styles.button}> Register </Text>
+                <Text style={[styles.button, styles.buttonText]}> Register </Text>
             </TouchableOpacity>
 
             {/* Proceed as tester */}
             <TouchableOpacity
                 onPress={() => {navigation.navigate("Home")}}
                 style={styles.button}>
-                <Text style={styles.button}> Proceed as Tester </Text>
+                <Text style={[styles.button, styles.buttonText]}> Proceed as Tester </Text>
             </TouchableOpacity>
 
         </View>
@@ -70,16 +70,41 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        
     },
     inputContainer: {
-        backgroundColor: '#FFF',
-        padding: 10,
-
+        width: '80%',
     },
-    input: {},
-    buttonContainer: {},
-    button: {},
+    input: {
+        backgroundColor: 'white',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 10,
+        marginTop: 5
+    },
+    buttonContainer: {
+        width: '60%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop:  40,
+    },
+    button: {
+        backgroundColor: "#0782F9",
+        width: '100%',
+        padding: 5,
+        borderRadius: 10,   
+        alignItems: 'center',
+        marginTop: 5
+    },
+    buttonOutline: {
+        color: 'white',
+        fontWeight: '700',
+        fontSize: 16,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: '700',
+        fontSize: 16
+    }
     
 })
 
