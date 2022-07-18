@@ -5,8 +5,13 @@ import * as Progress from 'react-native-progress'
 //Firebase stuff
 import { initializeApp} from 'firebase/app'
 import firebaseConfig from '../index'
+import { auth } from '../index';
 import { getFirestore, collection, query, where, getDocs, addDoc, deleteDoc, doc, initializeFirestore } from "firebase/firestore";
 import { ReactNativeFirebase } from '@react-native-firebase/app';
+import {signOut} from 'firebase/auth'
+import { useNavigation } from '@react-navigation/core';
+
+
 
 
 // ---------------------------
@@ -20,6 +25,7 @@ const db = getFirestore()
 const colRef = collection(db, 'Goals')
 // ---------------------------
 
+const navigate = useNavigation
 
 const Homescreen = () => {
   //For user ever-changing input
@@ -90,14 +96,31 @@ const Homescreen = () => {
     newExp(exp + 0.2)
   }
 
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("user has signed out")
+        navigation.navigate("Home")
+      })
+  }
+
 
 
   return (
     <View style={styles.container}>
       {/* Tasks */}
       <View style={styles.tasksWrapper}>
+
         {/* Title */}
-        <Text style={styles.navTitle}>Tasks</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.navTitle}>Tasks</Text>
+          <TouchableOpacity onPress={logout}>
+            <Text>Email: {auth.currentUser?.email} - Logout</Text>
+          </TouchableOpacity>
+
+        </View>
+
+        {/* Level */}
         <View style={styles.level}>
           <Text style={styles.leveltext}>Level: {level}</Text>
         </View>
@@ -141,8 +164,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f1f1f1',
   },
+  titleContainer: {
+    flex: 1,
+    justifyContent: 'space-around',
+  },
   tasksWrapper:{
-    paddingTop: 80,
+    paddingTop: 40,
     paddingHorizontal: 20,
   },
   level: {
