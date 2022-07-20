@@ -78,6 +78,7 @@ const Homescreen = () => {
     //Add to Firestore
     addDoc(colRef, {
       Goal: task,
+      Email: auth.currentUser?.email
     })
     // Crummy way of refreshing the compononent to display updated tasks
     setDocs()
