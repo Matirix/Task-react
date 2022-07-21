@@ -4,8 +4,8 @@ import Task from '../components/tasks';
 import * as Progress from 'react-native-progress'
 //Firebase stuff
 import { initializeApp} from 'firebase/app'
-import firebaseConfig from '../index'
-import { auth } from '../index';
+import firebaseConfig from '../firebaseconfig'
+import { auth } from '../firebaseconfig';
 import { getFirestore, collection, query, where, getDocs, addDoc, deleteDoc, doc, initializeFirestore } from "firebase/firestore";
 import { ReactNativeFirebase } from '@react-native-firebase/app';
 import {signOut} from 'firebase/auth'

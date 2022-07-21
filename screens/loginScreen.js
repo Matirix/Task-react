@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
-import { auth } from '../index';
+import { auth } from '../firebaseconfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signInAnonymously } from '@firebase/auth';
 
 
@@ -26,8 +26,8 @@ const LoginScreen = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then(userCredentials => {
                 const user = userCredentials.user;
-                console.log(user.email)
-                console.log("succesful signup")
+                // console.log(user.email)
+                // console.log("succesful signup")
                 // navigation.navigate("Home")
             })
             .catch(error => alert(error.message))
