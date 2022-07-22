@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
-import { auth } from '../firebaseconfig';
+import { auth, userRef } from '../firebaseconfig';
+import firebaseConfig from '../firebaseconfig';
+import { initializeApp} from 'firebase/app'
+import { getFirestore, collection, query, where, getDocs, addDoc, deleteDoc, doc, initializeFirestore } from "firebase/firestore";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signInAnonymously } from '@firebase/auth';
 
 
+initializeApp(firebaseConfig)
 
 
 const LoginScreen = () => {
@@ -26,9 +30,16 @@ const LoginScreen = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then(userCredentials => {
                 const user = userCredentials.user;
-                // console.log(user.email)
-                // console.log("succesful signup")
-                // navigation.navigate("Home")
+                console.log(user)
+                addDoc(userRef, {
+                    Level: 1,
+                    Exp: 0,
+                    Email: auth.currentUser?.email,
+                    Credentials: user.uid,
+                  })
+                
+                
+                navigation.navigate("Home")
             })
             .catch(error => alert(error.message))
     }

@@ -4,9 +4,9 @@ import Task from '../components/tasks';
 import * as Progress from 'react-native-progress'
 //Firebase stuff
 import { initializeApp} from 'firebase/app'
-import firebaseConfig from '../firebaseconfig'
-import { auth } from '../firebaseconfig';
-import { getFirestore, collection, query, where, getDocs, addDoc, deleteDoc, doc, initializeFirestore } from "firebase/firestore";
+import firebaseConfig, { userRef } from '../firebaseconfig'
+import { auth, db, colRef } from '../firebaseconfig';
+import { getFirestore, collection, query, where, getDocs, addDoc, deleteDoc, doc, initializeFirestore, updateDoc, onSnapshot } from "firebase/firestore";
 import { ReactNativeFirebase } from '@react-native-firebase/app';
 import {signOut} from 'firebase/auth'
 import { useNavigation } from '@react-navigation/core';
@@ -18,14 +18,7 @@ import { useNavigation } from '@react-navigation/core';
 // init firebase app
 initializeApp(firebaseConfig)
 
-// initservices
-const db = getFirestore()
 
-// collection ref
-const colRef = collection(db, 'Goals')
-// ---------------------------
-
-const navigate = useNavigation
 
 const Homescreen = () => {
   //For user ever-changing input
@@ -34,6 +27,7 @@ const Homescreen = () => {
   const [taskItems, setTaskItem] = useState([]);
   const [exp, newExp] = useState(0.01);
   const [level, newLevel] = useState(1)
+  const [x, setUser] = useState('')
 
   const setDocs = () => getDocs(colRef)
   .then((snapshot) => {
@@ -47,11 +41,11 @@ const Homescreen = () => {
       documents.push({...doc.data(), id: doc.id})
     });  
     setTaskItem(documents)
-
   })
   .catch(err => {
     console.log(err.message)
   })
+
 
 
 
@@ -61,12 +55,28 @@ const Homescreen = () => {
     // Somehow have to fix rerunning items
   }, [])
 
+
+
+//Query Parameters
+  const userDocIdq = query(userRef, where("Credentials", "==", auth.currentUser.uid))
+//Queury 
+  onSnapshot(userDocIdq, (snapshot) => (snapshot.docs.forEach((doc) => 
+  {setUser(doc.data().Credentials)})))
+
+
+
   // For EXP
   useEffect(() => {
-    console.log("working EXP")
+    // console.log(auth.currentUser.uid) 
+    console.log(x)
+
     if (exp > 1) {
       newExp(0.01)
       newLevel(level + 1)
+      updateDoc(userDocId, {
+        Level: level
+      })
+      
     }
   }, [exp])
 
